@@ -8,3 +8,7 @@ while True:
   sleep(0.5)
   cp.red_led = False
   sleep(0.5)
+  cp.red_led = True  
+  sleep(0.2)
+  cp.red_led = False
+  sleep(0.3)
