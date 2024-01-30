@@ -1,19 +1,31 @@
-# SPDX-FileCopyrightText: 2021 Kattni Rembor for Adafruit Industries
-#
-# SPDX-License-Identifier: MIT
 
 import time
 import board
 import neopixel
 
-# Calls the CircuitPython neopixel library, specifies the default board 
-# pins for the NeoPixels, and the number of NeoPixels to access. Returns a 
-# list 'pixels' of indexable NeoPixels
-pixels = neopixel.NeoPixel(board.NEOPIXEL, 5, brightness=0.2)
+#10 neopixels
+num_pixels = 10
+
+
+pixels = neopixel.NeoPixel(board.NEOPIXEL, num_pixels)
+
+def rainbow_cycle(wait):
+    for j in range(255):
+        for i in range(num_pixels):
+            pixel_index = (i * 256 // num_pixels) + j
+            pixels[i] = wheel(pixel_index & 255)
+        pixels.show()
+        time.sleep(wait)
+
+def wheel(pos):
+    if pos < 85:
+        return (pos * 3, 255 - pos * 3, 0)
+    elif pos < 170:
+        pos -= 85
+        return (255 - pos * 3, 0, pos * 3)
+    else:
+        pos -= 170
+        return (0, pos * 3, 255 - pos * 3)
 
 while True:
-    # Flash pattern for the first three NeoPixels
-    pixels[0:3] = [(255, 0, 0), (0, 0, 0), (255, 0, 0)]
-    time.sleep(0.5)
-    pixels.fill((0, 0, 0))
-    time.sleep(0.5)
+    rainbow_cycle(0.1)
